@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Последние обновления на сайте{% endblock %}
+{% block header %}Последние обновления на сайте{% endblock %}
+{% block content %}
+    {% for post in posts %}
+        {% if post.group.slug != None %}
+            <h3>
+                Автор: <a href="/group/{{ post.group.slug }}">{{ post.author.get_full_name }}</a>, Дата публикации: {{ post.pub_date|date:"d M Y" }}
+            </h3>
+        {% else %}
+            <h3>
+                Автор: {{ post.author.get_full_name }}, Дата публикации: {{ post.pub_date|date:"d M Y" }}
+            </h3>
+        {% endif %}
+        <p>{{ post.text|linebreaksbr }}</p>
+        {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+{% endblock %}
