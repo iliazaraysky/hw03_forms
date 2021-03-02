@@ -9,7 +9,13 @@
             <div class="card-header">Создать пост</div>
             <div class="card-body">
 
-                <form method="post">
+                {% for error in form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                {% endfor %}
+
+                <form method="post" action="{% url 'new_post' %}">
                     {% csrf_token %}
 
                     {% for field in form %}
