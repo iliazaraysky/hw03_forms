@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post, Group
 from .forms import NewPost
 from django.shortcuts import redirect
-from django.http import Http404
 
 
 def index(request):
