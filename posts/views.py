@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post, Group
 from .forms import NewPost
 from django.shortcuts import redirect
+from django.http import Http404
 
 
 def index(request):
@@ -16,13 +17,15 @@ def group_posts(request, slug):
 
 
 def post_view(request):
-    if request.method == 'POST':
-        form = NewPost(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('index')
-    else:
+    if request.method != 'POST':
         form = NewPost()
-    return render(request, 'newpost.html', {'form': form})
+        return render(request, 'newpost.html', {'form': form})
+
+    form = NewPost(request.POST)
+
+    if not form.is_valid():
+        return render(request, 'newpost.html', {'form': form})
+    post = form.save(commit=False)
+    post.author = request.user
+    post.save()
+    return redirect('index')

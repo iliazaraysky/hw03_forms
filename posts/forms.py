@@ -6,7 +6,7 @@ from .models import Post
 class NewPost(ModelForm):
     class Meta:
         model = Post
-        fields = ['group', 'text']
+        fields = ('group', 'text')
         labels = {
             'group': _('Группа'),
             'text': _('Сообщение'),
