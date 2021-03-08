@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from .models import Post, Group
 from .forms import NewPost
@@ -14,7 +15,7 @@ def group_posts(request, slug):
     posts = group.posts.all()[:12]
     return render(request, "group.html", {"groups": group, "posts": posts})
 
-
+@login_required
 def post_view(request):
     if request.method != 'POST':
         form = NewPost()
