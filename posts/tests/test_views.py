@@ -8,7 +8,7 @@ from posts.models import Group, Post
 User = get_user_model()
 
 
-class StaticURLTests(TestCase):
+class ProjectViewsTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -20,7 +20,7 @@ class StaticURLTests(TestCase):
         )
 
         cls.post = Post.objects.create(
-            group=StaticURLTests.group,
+            group=ProjectViewsTests.group,
             text="Какой-то там текст",
         )
 
