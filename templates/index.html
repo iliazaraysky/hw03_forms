@@ -2,7 +2,7 @@
 {% block title %}Последние обновления на сайте{% endblock %}
 {% block header %}Последние обновления на сайте{% endblock %}
 {% block content %}
-    {% for post in posts %}
+    {% for post in page %}
         {% if post.group.slug != None %}
             <h3>
                 Автор: <a href="/group/{{ post.group.slug }}">{{ post.author.get_full_name }}</a>, Дата публикации: {{ post.pub_date|date:"d M Y" }}
@@ -15,4 +15,6 @@
         <p>{{ post.text|linebreaksbr }}</p>
         {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
+
+    {% include "paginator.html" %}
 {% endblock %}

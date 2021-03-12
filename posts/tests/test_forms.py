@@ -24,6 +24,8 @@ class TestCreateForm(TestCase):
             text="Какой-то там текст",
         )
 
+        cls.form = NewPost()
+
     def setUp(self):
         self.guest_client = Client()
         self.user = User.objects.create_user(username='TestForTest')
@@ -33,7 +35,7 @@ class TestCreateForm(TestCase):
     def test_form_create(self):
         post_count = Post.objects.count()
         form_data = {
-            # 'group': 'Лев Толстой',
+            'group': '1',
             'text': 'Отправить текст',
         }
         response = self.authorized_client.post(reverse('new_post'),
@@ -42,6 +44,6 @@ class TestCreateForm(TestCase):
 
         self.assertRedirects(response, reverse('index'))
         self.assertEqual(Post.objects.count(), post_count + 1)
-        # self.assertTrue(Post.objects.filter(
-        #    text='Отправить текст',
-        #    group=TestCreateForm.group.title).exists())
+        self.assertTrue(Post.objects.filter(
+            text='Отправить текст',
+            group=TestCreateForm.group).exists())

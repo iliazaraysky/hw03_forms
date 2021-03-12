@@ -18,11 +18,11 @@ class ProjectViewsTests(TestCase):
             slug='tolstoy',
             description='Группа Льва Толстого',
         )
-
-        cls.post = Post.objects.create(
-            group=ProjectViewsTests.group,
-            text="Какой-то там текст",
-        )
+        for i in range(1, 14):
+            cls.post = Post.objects.create(
+                group=ProjectViewsTests.group,
+                text="Какой-то там текст",
+            )
 
     def setUp(self):
         self.guest_client = Client()
@@ -60,7 +60,7 @@ class ProjectViewsTests(TestCase):
     def test_home_page_show_correct_context(self):
         """Пост отображается на главной странице"""
         response = self.authorized_client.get('/')
-        first_object = response.context['posts'][0]
+        first_object = response.context['page'][0]
         post_text_0 = first_object.text
         post_group_0 = first_object.group.title
         self.assertEqual(post_text_0, 'Какой-то там текст')
@@ -68,6 +68,7 @@ class ProjectViewsTests(TestCase):
 
     def test_group_page_show_correct_context(self):
         """Пост отображается на странице группы"""
+
         response = self.authorized_client.get(
             reverse('group', kwargs={'slug': 'tolstoy'}))
         first_object = response.context['posts'][0]
@@ -75,3 +76,13 @@ class ProjectViewsTests(TestCase):
         post_group_0 = first_object.group.title
         self.assertEqual(post_text_0, 'Какой-то там текст')
         self.assertEqual(post_group_0, 'Лев Толстой')
+
+    def test_first_page_containse_ten_records(self):
+        """Колличество постов на первой странице равно 10"""
+
+        response = self.client.get(reverse('index'))
+        self.assertEqual(len(response.context.get('page').object_list), 10)
+
+    def test_second_page_containse_three_records(self):
+        response = self.guest_client.get(reverse('index') + '?page=2')
+        self.assertEqual(len(response.context.get('page').object_list), 3)
