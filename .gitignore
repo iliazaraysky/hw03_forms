@@ -17,6 +17,7 @@ __pycache__/
 
 static/
 posts/static/
+static_files/
 
 db.sqlite3
 .log
@@ -28,3 +29,4 @@ coverage.xml
 *.cover
 
 posts/migrations/
+about/migrations/

@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'about',
     'posts',
     'users',
     'django.contrib.admin',
@@ -131,7 +132,16 @@ STATIC_URL = '/static/'
 
 # задаём адрес директории, куда командой *collectstatic*
 # будет собрана вся статика
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "static_files")
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Media Folder Settings
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Login
 LOGIN_URL = "/auth/login/"

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
-from .models import Post, Group
+from .models import Post, Group, User
 from .forms import NewPost
 from django.shortcuts import redirect
 
@@ -19,6 +19,7 @@ def group_posts(request, slug):
     posts = group.posts.all()[:12]
     return render(request, "group.html", {"groups": group, "posts": posts})
 
+
 @login_required
 def post_view(request):
     if request.method != 'POST':
@@ -33,3 +34,16 @@ def post_view(request):
     post.author = request.user
     post.save()
     return redirect('index')
+
+
+def profile(request, username):
+    latest = User.objects.get(username=username)
+    return render(request, 'profile.html', {'latest': latest})
+#
+#
+# def post_view(request, username, post_id):
+#     pass
+#
+#
+# def post_edit(request, username, post_id):
+#     pass
