@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% block title %}Профиль пользователя {{ author.first_name }} {{ author.last_name }}{% endblock %}
+{% block header %}Профиль пользователя {{ author.first_name }} {{ author.last_name }}{% endblock %}
 {% block content %}
 <main role="main" class="container">
     <div class="row">
@@ -6,11 +8,11 @@
                     <div class="card">
                             <div class="card-body">
                                     <div class="h2">
-                                        {{ latest.first_name }} {{ latest.last_name }}
+                                        {{ author.first_name }} {{ author.last_name }}
                                     </div>
                                     <div class="h3 text-muted">
                                          <!-- username автора -->
-                                         @{{ latest.username }}
+                                         @{{ author.username }}
                                     </div>
                             </div>
                             <ul class="list-group list-group-flush">
@@ -23,7 +25,7 @@
                                     <li class="list-group-item">
                                             <div class="h6 text-muted">
                                                 <!-- Количество записей -->
-                                                Записей:
+                                                Записей: {{ counter }}
                                             </div>
                                     </li>
                             </ul>
@@ -31,22 +33,25 @@
             </div>
 
             <div class="col-md-9">
-
+                {% for page_data in page %}
                 <!-- Начало блока с отдельным постом -->
                     <div class="card mb-3 mt-1 shadow-sm">
                             <div class="card-body">
                                     <p class="card-text">
                                             <!-- Ссылка на страницу автора в атрибуте href; username автора в тексте ссылки -->
-                                            <a href="/leo/"><strong class="d-block text-gray-dark">@leo</strong></a>
+                                            <a href="{{ page_data.author }}"><strong class="d-block text-gray-dark">@{{ page_data.author }}</strong></a>
                                             <!-- Текст поста -->
-                                            [Фокшаны.] Еще переходъ до Фокшанъ, во время котораго я ѣхалъ съ Монго. Человѣкъ пустой, но съ твердыми, хотя и ложными убѣжденіями. Генерал[у] по этому должно быть случаю, угодно было спрашивать о моемъ здоровьи. Свинья! К[о]вырялъ носъ и ничего не написалъ — вотъ 2 упрека за нын[ѣшній] день. Послѣдній упрекъ становится слишкомъ частъ, хотя походъ и можетъ служить въ немъ отчасти извиненіемъ. Отношенія мои съ товарищами становятся такъ пріятны, что мнѣ жалко бросить штабъ. Здоровье кажется (2) лучше.
+                                            {{ page_data.text }}
+
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
                                             <div class="btn-group ">
                                                     <!-- Ссылка на страницу записи в атрибуте href-->
-                                                    <a class="btn btn-sm text-muted" href="/leo/37/" role="button">Добавить комментарий</a>
+                                                    <a class="btn btn-sm text-muted" href="{% url 'post' page_data.author page_data.id %}" role="button">Добавить комментарий</a>
                                                     <!-- Ссылка на редактирование, показывается только автору записи -->
-                                                    <a class="btn btn-sm text-muted" href="/leo/37/edit" role="button">Редактировать</a>
+                                                    {% if user == page_data.author %}
+                                                    <a class="btn btn-sm text-muted" href="{% url 'post_edit' page_data.author page_data.id %}" role="button">Редактировать</a>
+                                                    {% endif %}
                                             </div>
                                             <!-- Дата публикации  -->
                                             <small class="text-muted">31 июля 1854 г. 0:00</small>
@@ -54,9 +59,9 @@
                             </div>
                     </div>
                 <!-- Конец блока с отдельным постом -->
-
+                {% endfor %}
                 <!-- Остальные посты -->
-
+                {% include "paginator.html" %}
                 <!-- Здесь постраничная навигация паджинатора -->
      </div>
     </div>

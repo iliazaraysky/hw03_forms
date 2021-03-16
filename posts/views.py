@@ -21,7 +21,7 @@ def group_posts(request, slug):
 
 
 @login_required
-def post_view(request):
+def post_new(request):
     if request.method != 'POST':
         form = NewPost()
         return render(request, 'newpost.html', {'form': form})
@@ -37,13 +37,39 @@ def post_view(request):
 
 
 def profile(request, username):
-    latest = User.objects.get(username=username)
-    return render(request, 'profile.html', {'latest': latest})
-#
-#
-# def post_view(request, username, post_id):
-#     pass
-#
-#
-# def post_edit(request, username, post_id):
-#     pass
+    author = get_object_or_404(User, username=username)
+    all_posts = Post.objects.all().filter(author__username=username)
+    counter = all_posts.count()
+    paginator = Paginator(all_posts, 5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'profile.html',
+                  {'page': page, 'author': author, 'counter': counter})
+
+
+def post_view(request, username, post_id):
+    author = get_object_or_404(User, username=username)
+    full_post = get_object_or_404(Post, id=post_id)
+    all_posts = Post.objects.all().filter(author__username=username)
+    counter = all_posts.count()
+    return render(request, 'post.html',
+                  {'author': author, 'full_post': full_post,
+                   'counter': counter})
+
+
+def post_edit(request, username, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    author = get_object_or_404(User, username=username)
+    if request.method == 'GET':
+        if request.user != post.author:
+            return redirect('post', username=post.author, post_id=post.id)
+        form = NewPost(instance=post)
+
+    if request.method == 'POST':
+        form = NewPost(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+        return redirect('post', username=post.author, post_id=post.id)
+
+    return render(request, 'newpost.html',
+                  {'form': form, 'post': post, 'author': author})
